@@ -1,689 +1,471 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Github, Linkedin, Mail, MessageCircle, Download, ExternalLink, Code, Palette, Cloud, Brain, Smartphone, Database } from 'lucide-react';
+import { 
+  Github, 
+  Linkedin, 
+  Mail, 
+  Download, 
+  ChevronLeft, 
+  ChevronRight, 
+  Code, 
+  Database, 
+  Layout, 
+  Terminal,
+  Cpu,
+  Globe,
+  Phone,
+  Check,
+  Loader2,
+  Send,
+  ArrowUp,
+  ExternalLink,
+  MessageCircle,
+  X,
+  Maximize2,
+  Search,
+  PenTool,
+  Rocket,
+  Activity // Added Activity icon
+} from 'lucide-react';
 
-function Portfolio() {
-  const [displayedText, setDisplayedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
-  const [imageError, setImageError] = useState(false);
+// --- Data Configuration ---
 
-  const roles = [
-    'BTech Student in Web & Creative Media',
-    'Web Developer & UI/UX Designer',
-    'Creative Coder',
-    'Cloud Computing Enthusiast',
-    'AI & AR/VR Explorer',
-    'Full-Stack Developer'
-  ];
+const personalInfo = {
+  name: "Avishka D. Rajapaksha",
+  role: "IT Student & Software Developer",
+  about: "First-year IT student specializing in Java, JavaFX, and Database Management. Passionate about building robust desktop applications with MVC architecture and strict OOP principles.",
+  email: "rpavishkadilhara@gmail.com",
+  phone: "0759164843",
+  whatsapp: "94759164843", 
+  linkedin: "https://www.linkedin.com/in/avishka-d-rajapaksha-16b761300",
+  github: "https://github.com/avishka-d-rajapaksha",
+  cvLink: "/R_P_A_D_RAJAPAKSHA_CV.pdf",
+  profileImage: "/my.jpg.jpeg"
+};
 
-  // Typewriter effect
-  useEffect(() => {
-    const currentRole = roles[currentIndex];
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        if (displayedText !== currentRole) {
-          setDisplayedText(currentRole.slice(0, displayedText.length + 1));
-        } else {
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
-      } else {
-        if (displayedText === '') {
-          setIsDeleting(false);
-          setCurrentIndex((prev) => (prev + 1) % roles.length);
-        } else {
-          setDisplayedText(displayedText.slice(0, -1));
-        }
-      }
-    }, isDeleting ? 50 : 100);
+const skills = [
+  { name: "Java & JavaFX", icon: <Code size={20} /> },
+  { name: "MySQL & JDBC", icon: <Database size={20} /> },
+  { name: "MVC Architecture", icon: <Layout size={20} /> },
+  { name: "OOP Principles", icon: <Cpu size={20} /> },
+  { name: "React & Tailwind", icon: <Globe size={20} /> },
+  { name: "Git & GitHub", icon: <Terminal size={20} /> },
+];
 
-    return () => clearTimeout(timeout);
-  }, [displayedText, currentIndex, isDeleting, roles]);
+const services = [
+  {
+    title: "Desktop App Development",
+    desc: "Building robust, cross-platform desktop applications using Java and JavaFX with custom UI/UX and secure logic.",
+    icon: <Layout size={32} />
+  },
+  {
+    title: "Database Management",
+    desc: "Designing normalized database schemas (3NF) and optimizing SQL queries for high-performance data storage.",
+    icon: <Database size={32} />
+  },
+  {
+    title: "Modern Web Solutions",
+    desc: "Engineering scalable Single Page Applications (SPAs) using the React ecosystem and component-driven architectures.",
+    icon: <Globe size={32} />
+  },
+  {
+    title: "System Analysis",
+    desc: "Analyzing business requirements and designing MVC-based software architectures for scalable solutions.",
+    icon: <Terminal size={32} />
+  }
+];
 
-  // Mouse tracking for parallax effect
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX - window.innerWidth / 2) / 50,
-        y: (e.clientY - window.innerHeight / 2) / 50
-      });
-    };
+const workflow = [
+  {
+    step: "01",
+    title: "Discovery",
+    desc: "Analyzing requirements and system architecture to ensure the best technical approach.",
+    icon: <Search size={24} />
+  },
+  {
+    step: "02",
+    title: "Development",
+    desc: "Building solutions using strict OOP principles, clean code, and regular progress updates.",
+    icon: <PenTool size={24} />
+  },
+  {
+    step: "03",
+    title: "Delivery",
+    desc: "Final testing, deployment, and providing documentation for a smooth handover.",
+    icon: <Rocket size={24} />
+  }
+];
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+const education = [
+  {
+    institution: "University of Vocational Technology (UoVT)",
+    degree: "Bachelor of Technology in Web and Creative Media",
+    year: "Apr 2025 (Expected Start)",
+    desc: "Upcoming specialization in advanced web technologies and creative media architectures."
+  },
+  {
+    institution: "Sri Lanka Institute of Advanced Technological Education (SLIATE)",
+    degree: "Higher National Diploma in Information Technology",
+    year: "Aug 2024 - Jan 2027",
+    desc: "Comprehensive study of Web Development, Web Design, Web Services, and C# programming."
+  }
+];
 
-  // Scroll spy for navigation
+const projects = [
+  {
+    id: 1,
+    title: "CityMart Retail Store System",
+    date: "Nov 2025 - Dec 2025",
+    description: "A comprehensive desktop POS & Inventory system built with JavaFX and MySQL. Features atomic billing transactions, role-based access control, and automated email alerts.",
+    tech: ["JavaFX", "MySQL", "JDBC", "MVC Pattern", "JavaMail API"],
+    link: "https://github.com/avishka-d-rajapaksha/CityMart-Retail-System",
+    images: [
+      "/Screenshot/CityMart/screenshot-2025-12-02-011136.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011208.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011219.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011259.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011335.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011352.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011421.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011446.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011506.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011523.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011535.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011608.png",
+      "/Screenshot/CityMart/screenshot-2025-12-02-011620.png",
+      "/Screenshot/CityMart/whatsapp-image-2025-12-29-at-12.04.57.jpeg",
+      "/Screenshot/CityMart/whatsapp-image-2025-12-29-at-12.04.58.jpeg"
+    ]
+  },
+  {
+    id: 2,
+    title: "Enterprise Car Rental System",
+    date: "Jun 2024 - Jul 2024",
+    description: "A full-featured rental management system handling the entire vehicle lifecycle. Includes automatic late fee calculation, customer blacklisting, and PDF invoice generation.",
+    tech: ["Java", "JavaFX", "MySQL", "CSS", "PDF Generation"],
+    link: "https://github.com/avishka-d-rajapaksha/CarRentalSystem",
+    images: [
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-180455.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-180503.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-180944.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-180956.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-181153.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-181228.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-181333.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-190138.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-190400.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-190546.png",
+      "/Screenshot/CarRentalSystem/screenshot-2025-10-07-190607.png"
+    ]
+  },
+  {
+    id: 3,
+    title: "Gym Membership Tracker",
+    date: "Dec 2025",
+    description: "A membership management application for gyms. Tracks member attendance, subscription expiry dates, and payment history with a modern dashboard UI.",
+    tech: ["Java", "JavaFX", "MySQL"],
+    images: [
+      "/Screenshot/GymTracker/screenshot-2025-12-22-225459.png",
+      "/Screenshot/GymTracker/screenshot-2025-12-22-225516.png",
+      "/Screenshot/GymTracker/screenshot-2025-12-22-225524.png",
+      "/Screenshot/GymTracker/screenshot-2025-12-22-225558.png",
+      "/Screenshot/GymTracker/screenshot-2025-12-22-225645.png",
+      "/Screenshot/GymTracker/screenshot-2025-12-22-225815.png",
+      "/Screenshot/GymTracker/screenshot-2025-12-22-230128.png",
+      "/Screenshot/GymTracker/screenshot-2025-12-22-230135.png"
+    ]
+  },
+  {
+    id: 4,
+    title: "Caesar Cipher Tool",
+    date: "Oct 2025",
+    description: "An encryption/decryption tool demonstrating classic cryptography algorithms. Features real-time text processing, custom shift keys, and clipboard integration.",
+    tech: ["Java", "JavaFX", "Algorithms", "CSS"],
+    link: "https://github.com/avishka-d-rajapaksha/CaesarCipher",
+    images: [
+      "/Screenshot/caesarCipherTool/screenshot-2025-11-05-174325.png"
+    ]
+  },
+  {
+    id: 5,
+    title: "Knowledge Tree - E-Learning Platform",
+    date: "Jul 2023 - Sep 2023",
+    description: "Designed and launched a comprehensive e-learning web platform for teaching HTML, CSS, and PHP. Features resource aggregation (MDN, W3Schools) and a structured LMS interface.",
+    tech: ["Wix", "CMS", "HTML/CSS", "Responsive Web Design"],
+    link: "https://rpavishkadilhara.wixsite.com/knowledgetree1",
+    images: [
+      "/Screenshot/Knwolgdetree/home.jpg",
+      "/Screenshot/Knwolgdetree/aboutUs.jpg",
+      "/Screenshot/Knwolgdetree/contactUs.jpg",
+      "/Screenshot/Knwolgdetree/Login.jpg",
+      "/Screenshot/Knwolgdetree/Resources.jpg",
+      "/Screenshot/Knwolgdetree/Viedo.jpg"
+    ]
+  }
+];
+
+// --- Components ---
+
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'skills', 'projects', 'cv', 'contact'];
-      const scrollPosition = window.scrollY + 100;
-
-      for (const sectionId of sections) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(sectionId);
-            break;
-          }
+      setScrolled(window.scrollY > 50);
+      const sections = ['skills', 'services', 'projects', 'education', 'contact'];
+      let current = '';
+      for (let section of sections) {
+        const element = document.getElementById(section);
+        if (element && window.scrollY >= (element.offsetTop - 200)) {
+          current = section;
         }
       }
+      setActiveSection(current);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-    setIsMenuOpen(false);
   };
 
-  const projects = [
-    {
-      title: "Knowledge Tree Portfolio",
-      description: "Personal portfolio website showcasing projects, skills, and creative work built using Wix platform with custom design elements.",
-      tech: ["Wix", "Web Design", "UI/UX", "Responsive Design"],
-      github: "#",
-      demo: "https://rpavishkadilhara.wixsite.com/knowledgetree1",
-      image: "/api/placeholder/400/250"
-    }
-  ];
-
-  const tools = [
-    { name: "VS Code", icon: Code },
-    { name: "Figma", icon: Palette },
-    { name: "AWS", icon: Cloud },
-    { name: "TensorFlow", icon: Brain },
-    { name: "React Native", icon: Smartphone },
-    { name: "MongoDB", icon: Database }
-  ];
-
   return (
-    <div className="bg-black text-white">
-      <style>{`
-        @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md border-b border-zinc-800 py-4 shadow-lg' : 'bg-transparent py-6'}`}>
+      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        {/* Brand Name */}
+        <span className="text-lg md:text-xl font-bold text-white tracking-wide cursor-pointer select-none font-mono" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          Avishka D. Rajapaksha<span className="text-blue-500">_</span>
+        </span>
 
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        @keyframes wave {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(20deg); }
-          75% { transform: rotate(-10deg); }
-        }
-        
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        .animate-wave {
-          animation: wave 2s ease-in-out infinite;
-        }
-        
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
-      `}</style>
-
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto px-6 py-4">
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8 justify-center items-center">
-            {['Home', 'About', 'Skills', 'Projects', 'CV', 'Contact'].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item.toLowerCase())}
-                className={`transition-colors hover:text-white ${
-                  activeSection === item.toLowerCase() ? 'text-white' : 'text-gray-400'
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-            <button
-              onClick={() => window.open('/R_P_A_D_RAJAPAKSHA_CV.pdf', '_blank')}
-              className="px-4 py-2 border border-white/30 rounded-full hover:bg-white/10 transition-all"
-            >
-              Resume
-            </button>
-          </div>
-          
-          <div className="flex items-center justify-between md:hidden">
-            <div className="text-2xl font-bold">
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                Avishka D. Rajapaksha
-              </span>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 border-t border-white/10">
-              <div className="flex flex-col space-y-4 mt-4">
-                {['Home', 'About', 'Skills', 'Projects', 'CV', 'Contact'].map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => scrollToSection(item.toLowerCase())}
-                    className={`text-left transition-colors hover:text-white ${
-                      activeSection === item.toLowerCase() ? 'text-white' : 'text-gray-400'
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ))}
-                <button
-                  onClick={() => window.open('/R_P_A_D_RAJAPAKSHA_CV.pdf', '_blank')}
-                  className="text-left px-4 py-2 border border-white/30 rounded-full hover:bg-white/10 transition-all w-fit"
-                >
-                  Resume
-                </button>
-              </div>
-            </div>
-          )}
+        {/* Live Status Indicator */}
+        <div className="hidden lg:flex items-center gap-2 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-[10px] text-green-400 font-bold uppercase tracking-wider">Open to Work</span>
         </div>
-      </nav>
 
-      {/* Home Section */}
-      <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black pt-20">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-r from-white/10 to-gray-300/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-l from-gray-400/10 to-white/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          
-          {/* Floating particles */}
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 bg-white/20 rounded-full animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`
-              }}
-            ></div>
+        <div className="hidden md:flex gap-8 text-sm font-medium text-zinc-400">
+          {['Skills', 'Services', 'Projects', 'Education', 'Contact'].map((item) => (
+            <button 
+              key={item} 
+              onClick={() => scrollToSection(item.toLowerCase())}
+              className={`hover:text-blue-400 transition-colors uppercase tracking-wide text-xs ${activeSection === item.toLowerCase() ? 'text-blue-400 font-bold' : ''}`}
+            >
+              {item}
+            </button>
           ))}
         </div>
+      </div>
+    </nav>
+  );
+};
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between min-h-screen py-20">
-            {/* Text Content */}
-            <div className="flex-1 text-center lg:text-left mb-12 lg:mb-0">
-              <div className="space-y-6">
-                {/* Greeting with wave animation */}
-                <div className="text-lg text-gray-400 font-medium">
-                  <span className="inline-block animate-wave">👋</span> Hello, I'm
-                </div>
-                
-                {/* Name with gradient text */}
-                <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                  <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent animate-gradient">
-                    Avishka D. Rajapaksha
-                  </span>
-                </h1>
-                
-                {/* Typewriter role */}
-                <div className="h-16 flex items-center justify-center lg:justify-start">
-                  <h2 className="text-xl lg:text-2xl text-gray-300 font-light">
-                    {displayedText}
-                    <span className="animate-pulse text-white">|</span>
-                  </h2>
-                </div>
-                
-                {/* Description */}
-                <p className="text-lg text-gray-400 max-w-lg leading-relaxed">
-                  Passionate BTech student specializing in 
-                  <span className="text-white font-medium"> Web & Creative Media </span>
-                  at Faculty of IT, University of Vocational Technology (UoVT). Building modern, responsive websites while exploring 
-                  <span className="text-gray-300 font-medium"> AI, AR/VR, and Creative Coding</span>.
-                </p>
-                
-                {/* Skills tags */}
-                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                  {['React', 'UI/UX Design', 'JavaScript', 'Python', 'Firebase', 'Figma'].map((skill, index) => (
-                    <span
-                      key={skill}
-                      className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-white/90 border border-white/30 hover:bg-white/20 transition-all duration-300 hover:scale-105"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-                
-                {/* CTA Buttons */}
-                <div className="flex gap-4 justify-center lg:justify-start pt-4">
-                  <button
-                    onClick={() => scrollToSection('about')}
-                    className="group px-8 py-4 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/25"
-                  >
-                    <span className="flex items-center gap-2">
-                      Learn More About Me
-                      <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </button>
-                  
-                  <button
-                    onClick={() => scrollToSection('contact')}
-                    className="px-8 py-4 border-2 border-white/50 rounded-full text-white font-medium hover:bg-white/10 hover:border-white transition-all duration-300 hover:scale-105"
-                  >
-                    Get In Touch
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            {/* Hero Image */}
-            <div className="flex-1 flex justify-center lg:justify-end">
-              <div 
-                className="relative group"
-                style={{
-                  transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)`
-                }}
-              >
-                {/* Glowing background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-gray-300/20 rounded-full blur-2xl group-hover:blur-3xl transition-all duration-500 animate-pulse"></div>
-                
-                {/* Image container */}
-                <div className="relative w-80 h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-white/30 group-hover:border-white/60 transition-all duration-300 hover:scale-105">
-                  {!imageError ? (
-                    <img 
-                      src="/my.jpg.jpeg"
-                      alt="Profile photo of Avishka D. Rajapaksha, a BTech student in Web & Creative Media"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      onError={() => {
-                        setImageError(true);
-                      }}
-                      loading="lazy"
-                    />
-                  ) : (
-                    /* Stylish placeholder when image fails to load */
-                    <div className="w-full h-full bg-gradient-to-br from-gray-700 via-gray-600 to-gray-800 flex flex-col items-center justify-center relative">
-                      {/* Profile icon */}
-                      <div className="text-8xl text-white/80 mb-4 animate-pulse">👨‍💻</div>
-                      
-                      {/* Text overlay */}
-                      <div className="text-center">
-                        <p className="text-white/90 font-semibold text-lg">Avishka D. Rajapaksha</p>
-                        <p className="text-white/60 text-sm mt-1">BTech Student</p>
-                        <p className="text-white/40 text-xs mt-2">Professional Photo</p>
-                      </div>
-                      
-                      {/* Floating code symbols */}
-                      <div className="absolute top-4 left-4 text-white/30 text-2xl animate-bounce">{ }</div>
-                      <div className="absolute bottom-4 right-4 text-white/30 text-xl animate-bounce delay-500">&lt;/&gt;</div>
-                      <div className="absolute top-4 right-4 text-white/30 text-lg animate-bounce delay-300">💻</div>
-                    </div>
-                  )}
-                  
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                
-                {/* Floating elements around image */}
-                <div className="absolute -top-4 -left-4 w-8 h-8 bg-white/60 rounded-full animate-bounce delay-300"></div>
-                <div className="absolute -bottom-4 -right-4 w-6 h-6 bg-gray-300/60 rounded-full animate-bounce delay-700"></div>
-                <div className="absolute top-1/4 -right-8 w-4 h-4 bg-gray-400/60 rounded-full animate-bounce delay-500"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
-      </section>
+const Typewriter = ({ words, speed = 150, delay = 2000 }) => {
+  const [index, setIndex] = useState(0);
+  const [subIndex, setSubIndex] = useState(0);
+  const [reverse, setReverse] = useState(false);
+  const [blink, setBlink] = useState(true);
 
-      {/* About Section */}
-      <section id="about" className="py-20 bg-gray-900/50">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12">
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                About Me
-              </span>
+  useEffect(() => { const timeout2 = setInterval(() => setBlink((prev) => !prev), 500); return () => clearInterval(timeout2); }, []);
+  useEffect(() => {
+    if (index === words.length) return;
+    if (subIndex === words[index].length + 1 && !reverse) { setTimeout(() => setReverse(true), delay); return; }
+    if (subIndex === 0 && reverse) { setReverse(false); setIndex((prev) => (prev + 1) % words.length); return; }
+    const timeout = setTimeout(() => { setSubIndex((prev) => prev + (reverse ? -1 : 1)); }, Math.max(reverse ? 75 : subIndex === words[index].length ? 1000 : speed, parseInt(Math.random() * 50)));
+    return () => clearTimeout(timeout);
+  }, [subIndex, index, reverse, words, speed, delay]);
+  return <span className="text-blue-400">{`${words[index].substring(0, subIndex)}${blink ? "|" : " "}`}</span>;
+};
+
+const ProjectGallery = ({ images, onImageClick }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  if (!images || images.length === 0) return <div className="h-48 md:h-64 bg-zinc-900 rounded border border-zinc-800 flex items-center justify-center text-zinc-600 font-mono">NO SIGNAL</div>;
+  const nextSlide = (e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1)); };
+  const prevSlide = (e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1)); };
+
+  return (
+    <div className="relative group w-full aspect-video bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 shadow-2xl cursor-zoom-in" onClick={() => onImageClick(images[currentIndex])}>
+      <img src={images[currentIndex]} alt={`Screenshot ${currentIndex + 1}`} className="w-full h-full object-contain bg-black/50 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none">
+         <Maximize2 className="text-white opacity-0 group-hover:opacity-50 scale-150 transition-all" />
+      </div>
+      {images.length > 1 && (
+        <>
+          <button onClick={prevSlide} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-blue-600/80 p-2 md:p-3 rounded-full text-white backdrop-blur-md border border-white/10 transition-all active:scale-95 z-10 opacity-0 group-hover:opacity-100"><ChevronLeft size={20} /></button>
+          <button onClick={nextSlide} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-blue-600/80 p-2 md:p-3 rounded-full text-white backdrop-blur-md border border-white/10 transition-all active:scale-95 z-10 opacity-0 group-hover:opacity-100"><ChevronRight size={20} /></button>
+          <div className="absolute top-3 right-3 bg-black/70 backdrop-blur border border-zinc-700 text-blue-200 text-xs font-mono px-2 py-1 rounded">{currentIndex + 1} / {images.length}</div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const Lightbox = ({ src, onClose }) => {
+  if (!src) return null;
+  return (
+    <div className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-lg flex items-center justify-center p-4 animate-in fade-in duration-200" onClick={onClose}>
+      <button onClick={onClose} className="absolute top-6 right-6 text-white/70 hover:text-white bg-zinc-800/50 p-2 rounded-full transition-colors z-50"><X size={32} /></button>
+      <img src={src} alt="Full Screen" className="max-w-full max-h-full object-contain rounded shadow-2xl border border-zinc-800" onClick={(e) => e.stopPropagation()} />
+    </div>
+  );
+};
+
+// Enhanced Professional Contact Form
+const ContactForm = () => {
+  const [status, setStatus] = useState('idle');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setStatus('submitting');
+    setTimeout(() => { setStatus('success'); setTimeout(() => setStatus('idle'), 3000); }, 2000);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4 text-left p-6 rounded-2xl bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 transition-colors">
+      <div>
+        <label className="text-xs font-mono text-zinc-500 mb-2 block tracking-wider">PROJECT TYPE</label>
+        <div className="relative">
+          <select className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white appearance-none focus:border-blue-500 outline-none transition-colors cursor-pointer">
+            <option>Freelance Project</option>
+            <option>Full-Time Opportunity</option>
+            <option>Collaboration</option>
+            <option>Other</option>
+          </select>
+          <ChevronRight className="absolute right-3 top-3.5 text-zinc-500 rotate-90" size={16} />
+        </div>
+      </div>
+      <div>
+        <label className="text-xs font-mono text-blue-400 mb-2 block tracking-wider">YOUR NAME</label>
+        <input required type="text" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="John Doe" />
+      </div>
+      <div>
+        <label className="text-xs font-mono text-blue-400 mb-2 block tracking-wider">YOUR EMAIL</label>
+        <input required type="email" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="john@example.com" />
+      </div>
+      <div>
+        <label className="text-xs font-mono text-blue-400 mb-2 block tracking-wider">DETAILS</label>
+        <textarea required rows="4" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="Tell me about your project needs..."></textarea>
+      </div>
+      
+      <button 
+        disabled={status !== 'idle'}
+        className={`w-full flex items-center justify-center gap-2 font-bold py-3.5 rounded-lg transition-all duration-300 ${status === 'success' ? 'bg-green-600 text-white cursor-default' : 'bg-blue-600 hover:bg-blue-500 text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]'}`}
+      >
+        {status === 'idle' && <><Send size={18} /> SEND INQUIRY</>}
+        {status === 'submitting' && <><Loader2 size={18} className="animate-spin" /> SENDING...</>}
+        {status === 'success' && <><Check size={18} /> REQUEST SENT</>}
+      </button>
+    </form>
+  );
+};
+
+const App = () => {
+  const [copied, setCopied] = useState('');
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState(null);
+
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const copyToClipboard = (text, type) => {
+    navigator.clipboard.writeText(text);
+    setCopied(type);
+    setTimeout(() => setCopied(''), 2000);
+  };
+
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  return (
+    <div className="min-h-screen selection:bg-blue-500/30 selection:text-blue-200 overflow-x-hidden bg-[#030303]">
+      <Navbar />
+      <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+
+      {/* --- Hero Section --- */}
+      <header className="relative max-w-7xl mx-auto px-6 pt-32 pb-20 md:py-40">
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[300px] h-[300px] bg-blue-600/20 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+        <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-12">
+          <div className="flex-1 text-center md:text-left z-10">
+            <div className="inline-block mb-4 px-3 py-1 border border-blue-500/30 rounded-full bg-blue-500/10 backdrop-blur-md">
+              <span className="text-xs font-mono text-blue-300 tracking-wider">AVAILABLE FOR PROJECTS</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-cyber leading-tight">
+              <span className="block text-white">Avishka D.</span>
+              <span className="text-gradient">Rajapaksha</span>
+            </h1>
+            <h2 className="text-xl md:text-2xl text-zinc-400 mb-8 font-light flex items-center justify-center md:justify-start gap-3 h-8">
+              <Terminal size={24} className="text-blue-500" />
+              <span className="border-r pr-3 border-zinc-700 mr-2">I am a</span>
+              <Typewriter words={["IT Student", "Java Developer", "Database Designer", "Web Developer"]} />
             </h2>
-            
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <p className="text-gray-300 text-lg leading-relaxed">
-                  Hi, I'm Avishka D. Rajapaksha — currently studying full-time for a Bachelor of Technology (BTech) in Web and Creative Media at the Faculty of Information Technology, University of Vocational Technology (UoVT).
-                  I am also pursuing the Higher National Diploma in Information Technology (HNDIT) part-time at SLIATE Gampaha.
-                </p>
-
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-4">🎓 Education</h3>
-                    <div className="bg-white/5 rounded-lg p-4">
-                      <p className="text-white font-medium">Bachelor of Technology (BTech)</p>
-                      <p className="text-gray-300">Major: Web and Creative Media</p>
-                      <p className="text-gray-400">Faculty of IT, University of Vocational Technology (UoVT)</p>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-4 mt-4">
-                      <p className="text-white font-medium">Higher National Diploma in Information Technology</p>
-                      <p className="text-gray-400">at SLIATE Gampaha (Part Time)</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-white">🧩 Interests & Goals</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      'Modern Web Development', 
-                      'UI/UX Design', 
-                      'Creative Coding', 
-                      'Cloud Computing', 
-                      'AI & Machine Learning',
-                      'AR/VR Development',
-                      'Motion Design',
-                      'Project Management'
-                    ].map((interest) => (
-                      <span key={interest} className="px-3 py-1 bg-white/10 rounded-full text-sm text-gray-300">
-                        {interest}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+            <p className="text-zinc-300 mb-10 leading-relaxed max-w-lg mx-auto md:mx-0 text-base md:text-lg">
+              {personalInfo.about}
+            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
+              <a href={personalInfo.cvLink} download className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-lg font-medium transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] group"><Download size={20} className="group-hover:animate-bounce" /> Download CV</a>
+              {/* Direct WhatsApp Call to Action in Hero */}
+              <a href={`https://wa.me/${personalInfo.whatsapp}`} target="_blank" rel="noreferrer" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-zinc-900/50 hover:bg-green-600/10 hover:text-green-400 hover:border-green-500 text-white px-8 py-3.5 rounded-lg font-medium transition-all border border-zinc-700 backdrop-blur-sm group">
+                <MessageCircle size={20} className="group-hover:scale-110 transition-transform" /> Quick Chat
+              </a>
+            </div>
+          </div>
+          <div className="relative z-10">
+            <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full p-2 border border-zinc-700/50 bg-zinc-900/30 backdrop-blur-sm">
+              <div className="w-full h-full rounded-full overflow-hidden border-2 border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+                <img src={personalInfo.profileImage} alt="Profile" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
               </div>
-
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-white">🔧 Core IT Skills</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="space-y-3">
-                    <h4 className="text-white font-medium">Programming Languages</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { name: "JavaScript", icon: Code },
-                        { name: "Python", icon: Code },
-                        { name: "Java", icon: Code },
-                        { name: "C Programming", icon: Code }
-                      ].map((tech, index) => (
-                        <div 
-                          key={tech.name}
-                          className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
-                          style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                          <tech.icon className="w-5 h-5 text-white" />
-                          <span className="text-gray-300 text-sm">{tech.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="text-white font-medium">Design & Creative Tools</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { name: "Figma", icon: Palette },
-                        { name: "Adobe XD", icon: Palette },
-                        { name: "Photoshop", icon: Palette },
-                        { name: "Illustrator", icon: Palette }
-                      ].map((tool, index) => (
-                        <div 
-                          key={tool.name}
-                          className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
-                          style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                          <tool.icon className="w-5 h-5 text-white" />
-                          <span className="text-gray-300 text-sm">{tool.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="text-white font-medium">Cloud & Database</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { name: "Firebase", icon: Cloud },
-                        { name: "AWS Basics", icon: Cloud },
-                        { name: "MySQL", icon: Database },
-                        { name: "SQL Server", icon: Database }
-                      ].map((tech, index) => (
-                        <div 
-                          key={tech.name}
-                          className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
-                          style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                          <tech.icon className="w-5 h-5 text-white" />
-                          <span className="text-gray-300 text-sm">{tech.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+              {/* "System Online" Status Badge */}
+              <div className="absolute -bottom-6 -left-6 bg-[#0a0a0a] border border-zinc-800 p-4 rounded-xl shadow-2xl flex items-center gap-3 animate-bounce-slow">
+                <div className="relative">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <div className="absolute top-0 left-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                </div>
+                <div className="text-xs font-mono text-zinc-400 leading-tight">
+                  System Status:<br/><span className="text-white font-bold tracking-wider">ONLINE</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* Skills Section */}
-      <section id="skills" className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12">
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                My Skills
-              </span>
-            </h2>
-            
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Core Skills */}
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-2xl font-semibold text-white mb-6">💼 Core Skills</h3>
-                  <div className="grid gap-4">
-                    {[
-                      'UI/UX Design',
-                      'Programming (C, Java, Python, JavaScript)',
-                      'Databases',
-                      'OOP & Data Structures',
-                      'Web Development'
-                    ].map((skill, index) => (
-                      <div 
-                        key={skill}
-                        className="flex items-center gap-3 p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300"
-                        style={{ animationDelay: `${index * 0.1}s` }}
-                      >
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                        <span className="text-gray-300">{skill}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">⏱️ Experience Level</h3>
-                  <div className="bg-white/5 rounded-lg p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Code className="w-5 h-5 text-white" />
-                      <span className="text-white font-medium">Programming Experience</span>
-                    </div>
-                    <p className="text-gray-300">More than 2+ years</p>
-                  </div>
-                </div>
+      {/* --- Skills Section --- */}
+      <section id="skills" className="relative py-24 px-6 bg-[#050505] overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <h3 className="text-cyber text-2xl mb-12 flex items-center gap-3"><span className="w-8 h-1 bg-blue-600"></span>Technical Arsenal</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+            {skills.map((skill, index) => (
+              <div key={index} className="group relative bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-xl flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:border-blue-500/50 hover:bg-zinc-900 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(37,99,235,0.15)]">
+                <div className="p-3 bg-black rounded-full border border-zinc-800 text-zinc-400 group-hover:text-blue-400 group-hover:border-blue-500/30 transition-all duration-300">{skill.icon}</div>
+                <span className="font-medium text-sm text-zinc-300 group-hover:text-white tracking-wide text-center">{skill.name}</span>
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 blur-[2px] transition-opacity duration-300"></div>
               </div>
-
-              {/* Technical Proficiency */}
-              <div className="space-y-6">
-                <h3 className="text-2xl font-semibold text-white mb-6">📊 Technical Proficiency</h3>
-                
-                <div className="space-y-6">
-                  {/* C# .NET Framework */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-white font-medium">C# .NET Framework</span>
-                      <span className="text-gray-400 text-sm">50%</span>
-                    </div>
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-white to-gray-400 h-2 rounded-full transition-all duration-1000 ease-out" style={{ width: '50%' }}></div>
-                    </div>
-                  </div>
-
-                  {/* Java */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-white font-medium">Java</span>
-                      <span className="text-gray-400 text-sm">70%</span>
-                    </div>
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-white to-gray-300 h-2 rounded-full transition-all duration-1000 ease-out" style={{ width: '70%' }}></div>
-                    </div>
-                  </div>
-
-                  {/* Python */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-white font-medium">Python</span>
-                      <span className="text-gray-400 text-sm">Learning</span>
-                    </div>
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-gray-600 to-gray-500 h-2 rounded-full transition-all duration-1000 ease-out" style={{ width: '15%' }}></div>
-                    </div>
-                    <p className="text-gray-500 text-xs">Currently learning and exploring</p>
-                  </div>
-
-                  {/* PHP */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-white font-medium">PHP</span>
-                      <span className="text-gray-400 text-sm">Learning</span>
-                    </div>
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-gray-600 to-gray-500 h-2 rounded-full transition-all duration-1000 ease-out" style={{ width: '10%' }}></div>
-                    </div>
-                    <p className="text-gray-500 text-xs">Getting started with basics</p>
-                  </div>
-
-                  {/* Additional Skills */}
-                  <div className="mt-8 space-y-4">
-                    <h4 className="text-lg font-semibold text-white">Other Technologies</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { name: 'JavaScript', level: '65%' },
-                        { name: 'React', level: '60%' },
-                        { name: 'HTML/CSS', level: '85%' },
-                        { name: 'MySQL', level: '55%' },
-                        { name: 'Firebase', level: '45%' },
-                        { name: 'Git/GitHub', level: '70%' }
-                      ].map((tech, index) => (
-                        <div 
-                          key={tech.name}
-                          className="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-all duration-300"
-                          style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm text-gray-300">{tech.name}</span>
-                            <span className="text-xs text-gray-500">{tech.level}</span>
-                          </div>
-                          <div className="w-full bg-gray-800 rounded-full h-1">
-                            <div 
-                              className="bg-gradient-to-r from-white/70 to-gray-400/70 h-1 rounded-full transition-all duration-1000 ease-out" 
-                              style={{ width: tech.level }}
-                            ></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Skills Summary */}
-            <div className="mt-12 text-center">
-              <div className="bg-white/5 rounded-lg p-6 max-w-3xl mx-auto">
-                <h4 className="text-xl font-semibold text-white mb-4">🎯 Current Focus</h4>
-                <p className="text-gray-300 leading-relaxed">
-                  Strengthening my foundation in <strong>Java</strong> and <strong>C# .NET Framework</strong> while 
-                  exploring <strong>Python</strong> and <strong>PHP</strong> for full-stack development. 
-                  Passionate about combining <strong>UI/UX design</strong> with <strong>modern web technologies</strong> 
-                  to create exceptional user experiences.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="py-20 bg-gray-900/50">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-              My Projects
-            </span>
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <div 
-                key={project.title}
-                className="bg-gray-900/50 rounded-lg overflow-hidden hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-white/10"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                <div className="h-48 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-                  <Code className="w-16 h-16 text-gray-400" />
-                </div>
-                
-                <div className="p-6 space-y-4">
-                  <h3 className="text-xl font-semibold text-white">{project.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{project.description}</p>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((tech) => (
-                      <span key={tech} className="px-2 py-1 bg-white/10 rounded text-xs text-gray-300">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <div className="flex gap-4 pt-2">
-                    <a 
-                      href={project.github}
-                      className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
-                    >
-                      <Github className="w-4 h-4" />
-                      Code
-                    </a>
-                    <a 
-                      href={project.demo}
-                      className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Demo
-                    </a>
-                  </div>
+      {/* --- Services Section --- */}
+      <section id="services" className="py-24 px-6 bg-zinc-950">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <h3 className="text-cyber text-3xl flex items-center gap-3"><span className="w-8 h-1 bg-blue-600"></span>What I Can Do For You</h3>
+            <p className="text-zinc-500 text-sm md:text-right max-w-md leading-relaxed">Leveraging modern technologies to build scalable, high-performance solutions tailored to your business needs.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service, index) => (
+              <div key={index} className="group relative p-8 rounded-2xl bg-[#0a0a0a] border border-zinc-800 hover:border-blue-600/40 transition-all duration-500 overflow-hidden">
+                <span className="absolute -right-4 -top-8 text-[8rem] font-bold text-zinc-900/50 group-hover:text-zinc-800/50 transition-colors duration-500 select-none pointer-events-none">0{index + 1}</span>
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="mb-6 w-12 h-12 flex items-center justify-center bg-blue-900/10 rounded-lg border border-blue-500/20 text-blue-400 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">{service.icon}</div>
+                  <h4 className="text-xl font-bold text-white mb-4 group-hover:translate-x-1 transition-transform duration-300">{service.title}</h4>
+                  <p className="text-zinc-400 text-sm leading-relaxed flex-grow">{service.desc}</p>
+                  <div className="mt-6 w-full h-[1px] bg-zinc-800 group-hover:bg-blue-600/50 transition-colors duration-500"></div>
                 </div>
               </div>
             ))}
@@ -691,308 +473,126 @@ function Portfolio() {
         </div>
       </section>
 
-      {/* CV Section */}
-      <section id="cv" className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12">
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                Curriculum Vitae
-              </span>
-            </h2>
-
-            {/* CV Header */}
-            <div className="bg-gray-900/50 rounded-lg p-8 mb-8">
-              <div className="text-center mb-8">
-                <h3 className="text-3xl font-bold text-white mb-2">R.P.A.D. Rajapaksha</h3>
-                <p className="text-xl text-gray-300 mb-4">BTech Student in Web & Creative Media</p>
-                <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
-                  <span>📧 rpavishkadilhara@gmail.com</span>
-                  <span>📱 +94 75 916 4843</span>
-                  <span>🌐 GitHub: avishka-d-rajapaksha</span>
+      {/* --- Workflow / Process Section (NEW) --- */}
+      <section className="py-20 px-6 border-t border-zinc-900 bg-[#030303]">
+        <div className="max-w-7xl mx-auto">
+          <h3 className="text-cyber text-2xl mb-12 flex items-center gap-3"><span className="w-8 h-1 bg-blue-600"></span>My Workflow</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {workflow.map((step, index) => (
+              <div key={index} className="flex flex-col gap-4 p-6 border-l-2 border-zinc-800 hover:border-blue-500 transition-colors pl-6 bg-zinc-900/20">
+                <div className="flex items-center gap-3 text-zinc-500 group-hover:text-blue-400">
+                  <div className="p-2 bg-black rounded-lg border border-zinc-800 text-blue-500">{step.icon}</div>
+                  <span className="font-mono text-xl font-bold text-zinc-700">{step.step}</span>
                 </div>
+                <h4 className="text-lg font-bold text-white mt-2">{step.title}</h4>
+                <p className="text-sm text-zinc-400 leading-relaxed">{step.desc}</p>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Education */}
-            <div className="bg-white/5 rounded-lg p-6 mb-6">
-              <h3 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-                🎓 Education
-              </h3>
-              <div className="space-y-6">
-                <div className="border-l-4 border-white/30 pl-6">
-                  <h4 className="text-xl font-semibold text-white">Bachelor of Technology (BTech)</h4>
-                  <p className="text-gray-300 font-medium">Major: Web and Creative Media</p>
-                  <p className="text-gray-400">Faculty of Information Technology</p>
-                  <p className="text-gray-400">University of Vocational Technology (UoVT)</p>
-                  <p className="text-gray-500 text-sm mt-2">Current | Full-time</p>
-                </div>
-                
-                <div className="border-l-4 border-gray-500 pl-6">
-                  <h4 className="text-xl font-semibold text-white">Higher National Diploma in Information Technology</h4>
-                  <p className="text-gray-300 font-medium">HNDIT</p>
-                  <p className="text-gray-400">SLIATE Gampaha</p>
-                  <p className="text-gray-500 text-sm mt-2">Current | Part-time</p>
-                </div>
+      {/* --- Projects Section --- */}
+      <section id="projects" className="max-w-7xl mx-auto px-6 py-24">
+        <h3 className="text-cyber text-3xl md:text-4xl mb-16 flex items-center gap-4"><span className="w-2 h-8 bg-blue-600"></span>Featured Projects</h3>
+        <div className="flex flex-col gap-24">
+          {projects.map((project, index) => (
+            <div key={project.id} className={`flex flex-col lg:flex-row gap-10 lg:gap-16 items-start ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+              <div className="w-full lg:w-3/5">
+                <ProjectGallery images={project.images} onImageClick={setLightboxSrc} />
               </div>
-            </div>
-
-            {/* Technical Skills */}
-            <div className="bg-white/5 rounded-lg p-6 mb-6">
-              <h3 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-                💻 Technical Skills
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="w-full lg:w-2/5 flex flex-col justify-center pt-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-cyber text-5xl md:text-6xl font-bold text-zinc-800 select-none">0{index + 1}</span>
+                  <div className="h-px bg-zinc-800 flex-1"></div>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
+                  <h4 className="text-2xl md:text-3xl font-bold text-white group cursor-pointer">
+                    <span className="bg-left-bottom bg-gradient-to-r from-blue-500 to-blue-500 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">{project.title}</span>
+                  </h4>
+                  {project.link && (
+                    <a href={project.link} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-zinc-900 bg-blue-500 hover:bg-blue-400 px-3 py-1.5 rounded transition-colors">
+                      <ExternalLink size={14} /> {project.link.includes('github') ? 'SOURCE CODE' : 'LIVE DEMO'}
+                    </a>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                  <span className="text-xs font-mono text-blue-300/80 uppercase tracking-widest border border-blue-900/30 bg-blue-900/10 px-2 py-1 rounded">{project.date}</span>
+                </div>
+                <p className="text-zinc-400 mb-8 leading-relaxed text-lg border-l-2 border-zinc-800 pl-4">{project.description}</p>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-3">Programming Languages</h4>
-                  <ul className="space-y-2 text-gray-300">
-                    <li>• Java (Intermediate)</li>
-                    <li>• C# .NET Framework (Intermediate)</li>
-                    <li>• JavaScript (Intermediate)</li>
-                    <li>• C Programming (Basic)</li>
-                    <li>• Python (Learning)</li>
-                    <li>• PHP (Learning)</li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-3">Web Technologies</h4>
-                  <ul className="space-y-2 text-gray-300">
-                    <li>• HTML5 & CSS3</li>
-                    <li>• React.js</li>
-                    <li>• Responsive Web Design</li>
-                    <li>• UI/UX Design</li>
-                    <li>• Frontend Development</li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-3">Design Tools</h4>
-                  <ul className="space-y-2 text-gray-300">
-                    <li>• Figma</li>
-                    <li>• Adobe XD</li>
-                    <li>• Adobe Photoshop</li>
-                    <li>• Adobe Illustrator</li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-3">Database & Cloud</h4>
-                  <ul className="space-y-2 text-gray-300">
-                    <li>• MySQL</li>
-                    <li>• SQL Server</li>
-                    <li>• Firebase</li>
-                    <li>• AWS (Basic)</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Core Competencies */}
-            <div className="bg-white/5 rounded-lg p-6 mb-6">
-              <h3 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-                🎯 Core Competencies
-              </h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                {[
-                  'Object-Oriented Programming (OOP)',
-                  'Data Structures & Algorithms',
-                  'Database Design & Management',
-                  'User Interface Design',
-                  'User Experience (UX) Design',
-                  'Web Development',
-                  'Creative Problem Solving',
-                  'Project Management',
-                  'Version Control (Git/GitHub)',
-                  'Agile Development Methodologies'
-                ].map((skill, index) => (
-                  <div 
-                    key={skill}
-                    className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                  >
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                    <span className="text-gray-300 text-sm">{skill}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Projects & Portfolio */}
-            <div className="bg-white/5 rounded-lg p-6 mb-6">
-              <h3 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-                🚀 Projects & Portfolio
-              </h3>
-              <div className="space-y-4">
-                <div className="border-l-4 border-white/30 pl-6">
-                  <h4 className="text-lg font-semibold text-white">Knowledge Tree Portfolio</h4>
-                  <p className="text-gray-300 mb-2">Personal portfolio website showcasing projects, skills, and creative work</p>
-                  <p className="text-gray-400 text-sm mb-2">Technologies: Wix Platform, Custom Design, Responsive Layout</p>
-                  <a 
-                    href="https://rpavishkadilhara.wixsite.com/knowledgetree1" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white text-sm transition-colors"
-                  >
-                    🌐 View Live Portfolio
-                  </a>
-                </div>
-                
-                <div className="border-l-4 border-gray-500 pl-6">
-                  <h4 className="text-lg font-semibold text-white">Interactive React Portfolio</h4>
-                  <p className="text-gray-300 mb-2">Modern, responsive portfolio built with React and advanced animations</p>
-                  <p className="text-gray-400 text-sm">Technologies: React, JavaScript, Tailwind CSS, Lucide Icons</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Interests & Goals */}
-            <div className="bg-white/5 rounded-lg p-6 mb-8">
-              <h3 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-                🎯 Professional Interests & Goals
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Current Interests</h4>
+                  <h5 className="text-xs font-bold text-zinc-500 mb-4 uppercase tracking-widest font-mono">Built With</h5>
                   <div className="flex flex-wrap gap-2">
-                    {[
-                      'Modern Web Development',
-                      'UI/UX Design',
-                      'Creative Coding',
-                      'Cloud Computing',
-                      'AI & Machine Learning',
-                      'AR/VR Development',
-                      'Motion Design'
-                    ].map((interest) => (
-                      <span key={interest} className="px-3 py-1 bg-white/10 rounded-full text-sm text-gray-300">
-                        {interest}
-                      </span>
-                    ))}
+                    {project.tech.map((t, i) => (<span key={i} className="text-xs font-medium bg-zinc-900 text-zinc-300 px-4 py-2 rounded border border-zinc-800 hover:border-blue-500/50 hover:text-blue-200 transition-colors cursor-default">{t}</span>))}
                   </div>
-                </div>
-                
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Career Goals</h4>
-                  <ul className="space-y-2 text-gray-300">
-                    <li>• Develop expertise in full-stack web development</li>
-                    <li>• Master modern JavaScript frameworks and libraries</li>
-                    <li>• Build innovative web applications with excellent UX</li>
-                    <li>• Contribute to open-source projects</li>
-                    <li>• Explore emerging technologies like AI and AR/VR</li>
-                  </ul>
                 </div>
               </div>
             </div>
-
-            {/* Download CV Button */}
-            <div className="text-center">
-              <button
-                onClick={() => window.open('/R_P_A_D_RAJAPAKSHA_CV.pdf', '_blank')}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:scale-105"
-              >
-                <Download className="w-5 h-5" />
-                Download Full CV (PDF)
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gray-900/50">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-8">
-              <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
-                Get In Touch
-              </span>
-            </h2>
-            
-            <p className="text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
-              I'm always open to discussing new opportunities, creative projects, or just having a chat about technology. 
-              Feel free to reach out through any of the channels below!
-            </p>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <a 
-                href="https://github.com/avishka-d-rajapaksha"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group p-6 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
-              >
-                <Github className="w-8 h-8 text-white mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-white font-semibold mb-2">GitHub</h3>
-                <p className="text-gray-400 text-sm">@avishka-d-rajapaksha</p>
-              </a>
-              
-              <a 
-                href="https://www.linkedin.com/in/avishka-d-rajapaksha-16b761300"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group p-6 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
-              >
-                <Linkedin className="w-8 h-8 text-white mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-white font-semibold mb-2">LinkedIn</h3>
-                <p className="text-gray-400 text-sm">Connect professionally</p>
-              </a>
-              
-              <a 
-                href="mailto:rpavishkadilhara@gmail.com"
-                className="group p-6 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
-              >
-                <Mail className="w-8 h-8 text-white mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-white font-semibold mb-2">Email</h3>
-                <p className="text-gray-400 text-sm">rpavishkadilhara@gmail.com</p>
-              </a>
-              
-              <a 
-                href="https://wa.me/94759164843"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group p-6 bg-white/5 rounded-lg hover:bg-white/10 transition-all duration-300 hover:scale-105"
-              >
-                <MessageCircle className="w-8 h-8 text-white mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-white font-semibold mb-2">WhatsApp</h3>
-                <p className="text-gray-400 text-sm">Quick chat</p>
-              </a>
+      {/* --- Education Section --- */}
+      <section id="education" className="max-w-4xl mx-auto px-6 py-24 bg-[#050505] border-y border-zinc-900">
+        <h3 className="text-cyber text-3xl mb-12 flex items-center gap-4"><span className="w-2 h-8 bg-blue-600"></span>Education Path</h3>
+        <div className="relative border-l-2 border-zinc-800 ml-3 space-y-12">
+          {education.map((edu, index) => (
+            <div key={index} className="relative pl-8 group">
+              <div className="absolute -left-[9px] top-2 w-4 h-4 rounded-full bg-zinc-900 border-2 border-blue-600 group-hover:scale-125 group-hover:bg-blue-600 transition-all duration-300 shadow-[0_0_10px_rgba(37,99,235,0.5)]"></div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                <h4 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">{edu.institution}</h4>
+                <span className="text-xs font-mono text-blue-300 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10 mt-2 sm:mt-0 w-fit">{edu.year}</span>
+              </div>
+              <h5 className="text-zinc-300 mb-3 font-medium text-lg">{edu.degree}</h5>
+              <p className="text-zinc-500 text-sm leading-relaxed max-w-2xl">{edu.desc}</p>
             </div>
-            
-            <div className="mt-12 flex gap-4 justify-center">
-              <button
-                onClick={() => window.open('/R_P_A_D_RAJAPAKSHA_CV.pdf', '_blank')}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition-all duration-300 hover:scale-105"
-              >
-                <Download className="w-5 h-5" />
-                Download Resume
-              </button>
-              
-              <a
-                href="https://rpavishkadilhara.wixsite.com/knowledgetree1"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 border-2 border-white/50 rounded-full text-white font-medium hover:bg-white/10 hover:border-white transition-all duration-300 hover:scale-105"
-              >
-                <ExternalLink className="w-5 h-5" />
-                Wix Portfolio
-              </a>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 border-t border-white/10">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-gray-400">
-            © 2024 Avishka D. Rajapaksha. Built with React
-          </p>
-          <p className="text-gray-500 text-sm mt-2">
-            BTech Student in Web & Creative Media | Faculty of IT, University of Vocational Technology (UoVT)
-          </p>
+      {/* --- Contact Section --- */}
+      <section id="contact" className="py-24 relative">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h3 className="text-cyber text-3xl mb-6 text-gradient">Ready to Collaborate?</h3>
+          <p className="text-zinc-400 mb-10 text-lg">I am currently open to freelance projects and full-time opportunities.</p>
+          <ContactForm />
+        </div>
+      </section>
+
+      {/* --- Footer --- */}
+      <footer className="border-t border-zinc-900 bg-[#020202] py-12 relative overflow-hidden">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-blue-900/10 blur-[100px] pointer-events-none"></div>
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex flex-wrap justify-center gap-6 mb-8">
+            <a href={personalInfo.linkedin} target="_blank" rel="noreferrer" className="p-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-blue-500 hover:bg-blue-600/10 hover:text-blue-400 transition-all duration-300 group" title="LinkedIn"><Linkedin size={24} className="group-hover:scale-110 transition-transform" /></a>
+            <a href={personalInfo.github} target="_blank" rel="noreferrer" className="p-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-blue-500 hover:bg-blue-600/10 hover:text-blue-400 transition-all duration-300 group" title="GitHub"><Github size={24} className="group-hover:scale-110 transition-transform" /></a>
+            <button onClick={() => copyToClipboard(personalInfo.email, 'email')} className="p-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-blue-500 hover:bg-blue-600/10 hover:text-blue-400 transition-all duration-300 group relative" title="Copy Email">
+              {copied === 'email' ? <Check size={24} className="text-green-500" /> : <Mail size={24} className="group-hover:scale-110 transition-transform" />}
+              {copied === 'email' && <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded shadow-lg animate-bounce">Copied!</span>}
+            </button>
+            <button onClick={() => copyToClipboard(personalInfo.phone, 'phone')} className="p-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-blue-500 hover:bg-blue-600/10 hover:text-blue-400 transition-all duration-300 group relative" title="Copy Phone">
+              {copied === 'phone' ? <Check size={24} className="text-green-500" /> : <Phone size={24} className="group-hover:scale-110 transition-transform" />}
+              {copied === 'phone' && <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded shadow-lg animate-bounce">Copied!</span>}
+            </button>
+          </div>
+          <p className="text-zinc-600 text-sm font-mono">© {new Date().getFullYear()} {personalInfo.name}. All rights reserved. <span className="text-blue-900 mx-2">|</span> Built with React & Tailwind</p>
         </div>
       </footer>
+
+      {/* Floating Buttons */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
+        <a href={`https://wa.me/${personalInfo.whatsapp}`} target="_blank" rel="noreferrer" className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center group relative" title="Chat on WhatsApp">
+          <MessageCircle size={24} />
+          {/* Tooltip for WhatsApp */}
+          <span className="absolute right-full mr-3 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Chat Now</span>
+        </a>
+        <button onClick={scrollTop} className={`bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
+          <ArrowUp size={24} />
+        </button>
+      </div>
     </div>
   );
-}
+};
 
-export default Portfolio;
+export default App;
