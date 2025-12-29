@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 import { 
   Github, 
   Linkedin, 
@@ -313,21 +314,38 @@ const Lightbox = ({ src, onClose }) => {
   );
 };
 
-// Enhanced Professional Contact Form
+// --- UPDATED CONTACT FORM WITH EMAILJS ---
 const ContactForm = () => {
+  const form = useRef();
   const [status, setStatus] = useState('idle');
-  const handleSubmit = (e) => {
+
+  const sendEmail = (e) => {
     e.preventDefault();
     setStatus('submitting');
-    setTimeout(() => { setStatus('success'); setTimeout(() => setStatus('idle'), 3000); }, 2000);
+
+    // ⚠️ IMPORTANT: REPLACE THESE WITH YOUR KEYS FROM EMAILJS DASHBOARD
+    const SERVICE_ID = "YOUR_SERVICE_ID"; 
+    const TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+    const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+
+    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
+      .then((result) => {
+          setStatus('success');
+          e.target.reset(); // Clears the form after success
+          setTimeout(() => setStatus('idle'), 3000);
+      }, (error) => {
+          console.log(error.text);
+          setStatus('error');
+          setTimeout(() => setStatus('idle'), 3000);
+      });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4 text-left p-6 rounded-2xl bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 transition-colors">
+    <form ref={form} onSubmit={sendEmail} className="max-w-md mx-auto space-y-4 text-left p-6 rounded-2xl bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 transition-colors">
       <div>
         <label className="text-xs font-mono text-zinc-500 mb-2 block tracking-wider">PROJECT TYPE</label>
         <div className="relative">
-          <select className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white appearance-none focus:border-blue-500 outline-none transition-colors cursor-pointer">
+          <select name="project_type" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white appearance-none focus:border-blue-500 outline-none transition-colors cursor-pointer">
             <option>Freelance Project</option>
             <option>Full-Time Opportunity</option>
             <option>Collaboration</option>
@@ -338,24 +356,25 @@ const ContactForm = () => {
       </div>
       <div>
         <label className="text-xs font-mono text-blue-400 mb-2 block tracking-wider">YOUR NAME</label>
-        <input required type="text" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="John Doe" />
+        <input required type="text" name="from_name" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="John Doe" />
       </div>
       <div>
         <label className="text-xs font-mono text-blue-400 mb-2 block tracking-wider">YOUR EMAIL</label>
-        <input required type="email" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="john@example.com" />
+        <input required type="email" name="from_email" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="john@example.com" />
       </div>
       <div>
         <label className="text-xs font-mono text-blue-400 mb-2 block tracking-wider">DETAILS</label>
-        <textarea required rows="4" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="Tell me about your project needs..."></textarea>
+        <textarea required name="message" rows="4" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white focus:border-blue-500 focus:outline-none transition-colors" placeholder="Tell me about your project needs..."></textarea>
       </div>
       
       <button 
         disabled={status !== 'idle'}
-        className={`w-full flex items-center justify-center gap-2 font-bold py-3.5 rounded-lg transition-all duration-300 ${status === 'success' ? 'bg-green-600 text-white cursor-default' : 'bg-blue-600 hover:bg-blue-500 text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]'}`}
+        className={`w-full flex items-center justify-center gap-2 font-bold py-3.5 rounded-lg transition-all duration-300 ${status === 'success' ? 'bg-green-600 text-white cursor-default' : status === 'error' ? 'bg-red-600 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]'}`}
       >
         {status === 'idle' && <><Send size={18} /> SEND INQUIRY</>}
         {status === 'submitting' && <><Loader2 size={18} className="animate-spin" /> SENDING...</>}
         {status === 'success' && <><Check size={18} /> REQUEST SENT</>}
+        {status === 'error' && <><X size={18} /> FAILED. TRY AGAIN.</>}
       </button>
     </form>
   );
@@ -368,7 +387,6 @@ const App = () => {
 
   useEffect(() => {
     // --- DYNAMIC TITLE UPDATE ---
-    // This sets the browser tab title when the app loads
     document.title = "Avishka D. Rajapaksha | Portfolio";
     
     const handleScroll = () => setShowScrollTop(window.scrollY > 400);
