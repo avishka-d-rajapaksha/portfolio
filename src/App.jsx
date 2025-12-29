@@ -24,7 +24,7 @@ import {
   Search,
   PenTool,
   Rocket,
-  Activity // Added Activity icon
+  Activity 
 } from 'lucide-react';
 
 // --- Data Configuration ---
@@ -367,6 +367,10 @@ const App = () => {
   const [lightboxSrc, setLightboxSrc] = useState(null);
 
   useEffect(() => {
+    // --- DYNAMIC TITLE UPDATE ---
+    // This sets the browser tab title when the app loads
+    document.title = "Avishka D. Rajapaksha | Portfolio";
+    
     const handleScroll = () => setShowScrollTop(window.scrollY > 400);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
