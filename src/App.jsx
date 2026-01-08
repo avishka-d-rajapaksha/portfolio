@@ -24,20 +24,19 @@ import {
   Maximize2,
   Search,
   PenTool,
-  Rocket,
-  Activity 
+  Rocket
 } from 'lucide-react';
 
 // --- Data Configuration ---
 
 const personalInfo = {
   name: "Avishka D. Rajapaksha",
-  role: "IT Student & Software Developer",
-  about: "First-year IT student specializing in Java, JavaFX, and Database Management. Passionate about building robust desktop applications with MVC architecture and strict OOP principles.",
+  role: "IT Undergraduate & Software Developer", // REBRANDED: Removed "Student"
+  about: "IT Undergraduate and Software Developer specializing in JavaFX, Java, and Database Management. Focused on building production-grade desktop applications with MVC architecture and strict OOP principles.", // REBRANDED: Professional Bio
   email: "rpavishkadilhara@gmail.com",
   phone: "0759164843",
   whatsapp: "94759164843", 
-  linkedin: "https://www.linkedin.com/in/avishka-d-rajapaksha-16b761300",
+  linkedin: "https://www.linkedin.com/in/avishka-d-rajapaksha-16b761300", // Make sure to update your URL in LinkedIn settings too
   github: "https://github.com/avishka-d-rajapaksha",
   cvLink: "/R_P_A_D_RAJAPAKSHA_CV.pdf",
   profileImage: "/my.jpg.jpeg"
@@ -69,8 +68,8 @@ const services = [
     icon: <Globe size={32} />
   },
   {
-    title: "System Analysis",
-    desc: "Analyzing business requirements and designing MVC-based software architectures for scalable solutions.",
+    title: "Source Code Solutions", // NEW SERVICE: Selling Codes
+    desc: "Providing clean, well-documented source codes for POS and Management systems suitable for business or educational use.",
     icon: <Terminal size={32} />
   }
 ];
@@ -100,13 +99,13 @@ const education = [
   {
     institution: "University of Vocational Technology (UoVT)",
     degree: "Bachelor of Technology in Web and Creative Media",
-    year: "Apr 2025 (Expected Start)",
-    desc: "Upcoming specialization in advanced web technologies and creative media architectures."
+    year: "Apr 2025 - Present", // FIXED: Shows consistency
+    desc: "Specialization in advanced web technologies and creative media architectures."
   },
   {
     institution: "Sri Lanka Institute of Advanced Technological Education (SLIATE)",
     degree: "Higher National Diploma in Information Technology",
-    year: "Aug 2024 - Jan 2027",
+    year: "Aug 2024 - Present",
     desc: "Comprehensive study of Web Development, Web Design, Web Services, and C# programming."
   }
 ];
@@ -119,6 +118,7 @@ const projects = [
     description: "A comprehensive desktop POS & Inventory system built with JavaFX and MySQL. Features atomic billing transactions, role-based access control, and automated email alerts.",
     tech: ["JavaFX", "MySQL", "JDBC", "MVC Pattern", "JavaMail API"],
     link: "https://github.com/avishka-d-rajapaksha/CityMart-Retail-System",
+    sellable: true, // TRIGGER FOR BUY BUTTON
     images: [
       "/Screenshot/CityMart/screenshot-2025-12-02-011136.png",
       "/Screenshot/CityMart/screenshot-2025-12-02-011208.png",
@@ -144,6 +144,7 @@ const projects = [
     description: "A full-featured rental management system handling the entire vehicle lifecycle. Includes automatic late fee calculation, customer blacklisting, and PDF invoice generation.",
     tech: ["Java", "JavaFX", "MySQL", "CSS", "PDF Generation"],
     link: "https://github.com/avishka-d-rajapaksha/CarRentalSystem",
+    sellable: true,
     images: [
       "/Screenshot/CarRentalSystem/screenshot-2025-10-07-180455.png",
       "/Screenshot/CarRentalSystem/screenshot-2025-10-07-180503.png",
@@ -164,6 +165,7 @@ const projects = [
     date: "Dec 2025",
     description: "A membership management application for gyms. Tracks member attendance, subscription expiry dates, and payment history with a modern dashboard UI.",
     tech: ["Java", "JavaFX", "MySQL"],
+    sellable: true,
     images: [
       "/Screenshot/GymTracker/screenshot-2025-12-22-225459.png",
       "/Screenshot/GymTracker/screenshot-2025-12-22-225516.png",
@@ -182,6 +184,7 @@ const projects = [
     description: "An encryption/decryption tool demonstrating classic cryptography algorithms. Features real-time text processing, custom shift keys, and clipboard integration.",
     tech: ["Java", "JavaFX", "Algorithms", "CSS"],
     link: "https://github.com/avishka-d-rajapaksha/CaesarCipher",
+    sellable: false,
     images: [
       "/Screenshot/caesarCipherTool/screenshot-2025-11-05-174325.png"
     ]
@@ -190,9 +193,10 @@ const projects = [
     id: 5,
     title: "Knowledge Tree - E-Learning Platform",
     date: "Jul 2023 - Sep 2023",
-    description: "Designed and launched a comprehensive e-learning web platform for teaching HTML, CSS, and PHP. Features resource aggregation (MDN, W3Schools) and a structured LMS interface.",
-    tech: ["Wix", "CMS", "HTML/CSS", "Responsive Web Design"],
+    description: "Designed and launched a comprehensive e-learning web platform for teaching HTML, CSS, and PHP. Features resource aggregation and a structured LMS interface.",
+    tech: ["LMS Architecture", "Content Strategy", "HTML/CSS", "Responsive UI"], // FIXED: Removed Wix
     link: "https://rpavishkadilhara.wixsite.com/knowledgetree1",
+    sellable: false,
     images: [
       "/Screenshot/Knwolgdetree/home.jpg",
       "/Screenshot/Knwolgdetree/aboutUs.jpg",
@@ -347,9 +351,9 @@ const ContactForm = () => {
         <div className="relative">
           <select name="project_type" className="w-full bg-black/50 border border-zinc-800 rounded p-3 text-white appearance-none focus:border-blue-500 outline-none transition-colors cursor-pointer">
             <option>Freelance Project</option>
+            <option>Buy Source Code</option> {/* Added this option */}
             <option>Full-Time Opportunity</option>
             <option>Collaboration</option>
-            <option>Other</option>
           </select>
           <ChevronRight className="absolute right-3 top-3.5 text-zinc-500 rotate-90" size={16} />
         </div>
@@ -422,7 +426,7 @@ const App = () => {
             <h2 className="text-xl md:text-2xl text-zinc-400 mb-8 font-light flex items-center justify-center md:justify-start gap-3 h-8">
               <Terminal size={24} className="text-blue-500" />
               <span className="border-r pr-3 border-zinc-700 mr-2">I am a</span>
-              <Typewriter words={["IT Student", "Java Developer", "Database Designer", "Web Developer"]} />
+              <Typewriter words={["Software Developer", "JavaFX Specialist", "Database Architect", "Web Developer"]} />
             </h2>
             <p className="text-zinc-300 mb-10 leading-relaxed max-w-lg mx-auto md:mx-0 text-base md:text-lg">
               {personalInfo.about}
@@ -495,7 +499,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* --- Workflow / Process Section (NEW) --- */}
+      {/* --- Workflow / Process Section --- */}
       <section className="py-20 px-6 border-t border-zinc-900 bg-[#030303]">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-cyber text-2xl mb-12 flex items-center gap-3"><span className="w-8 h-1 bg-blue-600"></span>My Workflow</h3>
@@ -532,11 +536,19 @@ const App = () => {
                   <h4 className="text-2xl md:text-3xl font-bold text-white group cursor-pointer">
                     <span className="bg-left-bottom bg-gradient-to-r from-blue-500 to-blue-500 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">{project.title}</span>
                   </h4>
-                  {project.link && (
-                    <a href={project.link} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-zinc-900 bg-blue-500 hover:bg-blue-400 px-3 py-1.5 rounded transition-colors">
-                      <ExternalLink size={14} /> {project.link.includes('github') ? 'SOURCE CODE' : 'LIVE DEMO'}
-                    </a>
-                  )}
+                  <div className="flex gap-2">
+                    {project.link && (
+                      <a href={project.link} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-zinc-900 bg-blue-500 hover:bg-blue-400 px-3 py-1.5 rounded transition-colors">
+                        <ExternalLink size={14} /> {project.link.includes('github') ? 'VIEW CODE' : 'LIVE DEMO'}
+                      </a>
+                    )}
+                    {/* NEW: BUY SOURCE CODE BUTTON */}
+                    {project.sellable && (
+                      <a href={`https://wa.me/${personalInfo.whatsapp}?text=Hi Avishka, I am interested in buying the source code for ${project.title}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-white bg-green-600 hover:bg-green-500 px-3 py-1.5 rounded transition-colors ml-1 shadow-[0_0_10px_rgba(34,197,94,0.3)] animate-pulse">
+                         <MessageCircle size={14} /> BUY NOW
+                      </a>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 mb-6">
                   <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
@@ -577,7 +589,7 @@ const App = () => {
       <section id="contact" className="py-24 relative">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h3 className="text-cyber text-3xl mb-6 text-gradient">Ready to Collaborate?</h3>
-          <p className="text-zinc-400 mb-10 text-lg">I am currently open to freelance projects and full-time opportunities.</p>
+          <p className="text-zinc-400 mb-10 text-lg">I am currently open to freelance projects, source code sales, and full-time opportunities.</p>
           <ContactForm />
         </div>
       </section>
